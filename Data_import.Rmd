@@ -1,0 +1,137 @@
+---
+title: "Simple document"
+author: "Liliang Su"
+date: "2025.9.6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+
+## Importing data tables
+
+Here's a **code chunk** that samples from 
+a _normal distribution_:
+
+```{r}
+litters_df = read_csv(file = "./data/FAS_litters.csv")
+#litters_df = read_csv(file = "~/Desktop/CU_course/8105_DataScience1/Topic2_DataWrangling_1/data/FAS_litters.csv")
+
+names(litters_df)
+```
+
+Convert column names to lower snake case.
+```{r}
+litters_df = janitor::clean_names(litters_df)
+names(litters_df)
+```
+
+
+## Looking at the data
+
+```{r}
+litters_df
+tail(litters_df, 5)
+```
+```{r}
+skimr::skim(litters_df)
+```
+
+*Note*: `view(litters_df)` only in the console, remove them from .Rmd
+
+## Arguments to read_*
+
+```{r}
+litters_df = 
+    read_csv(file = "./data/FAS_litters.csv",
+    skip = 10, col_names = FALSE)
+head(litters_df)
+
+
+```
+
+*   missing values
+```{r}
+litters_df = 
+    read_csv(
+        file = "./data/FAS_litters.csv",
+        na = c(".", "NA", ""))
+head(litters_df)
+```
+
+## Parsing columns
+```{r}
+litters_df = 
+    read_csv(file = "./data/FAS_litters.csv",
+        na = c(".", "NA", ""),
+    col_types = cols(
+      Group = col_character(),
+      `Litter Number` = col_character(),
+      `GD0 weight` = col_double(),
+      `GD18 weight` = col_double(),
+      `GD of Birth` = col_integer(),
+      `Pups born alive` = col_integer(),
+      `Pups dead @ birth` = col_integer(),
+      `Pups survive` = col_integer()
+    )
+  )
+
+tail(litters_df)
+```
+
+```{r}
+litters_df = 
+    read_csv(file = "./data/FAS_litters.csv",
+        na = c(".", "NA", ""),
+    col_types = cols(
+      Group = col_factor()
+    )
+)
+
+head(litters_df)
+```
+
+learning assignments
+```{r}
+pups_df = 
+    read_csv("./data/FAS_pups.csv",
+        na = c(".", "NA"), col_types = "fddddd")
+
+skimr::skim(pups_df)
+head(pups_df)
+```
+
+## xlsx
+```{r}
+library(readxl)
+
+mlb11_df = read_excel("data/mlb11.xlsx", n_max = 20)
+
+head(mlb11_df, 5)
+```
+
+## other file formats
+```{r}
+library(haven)
+
+pulse_df = read_sas("./data/public_pulse_data.sas7bdat")
+
+head(pulse_df, 5)
+```
+
+## Comparsion with base R (read.csv)
+```{r}
+pups_base = read.csv("./data/FAS_pups.csv")
+pups_readr = read_csv("./data/FAS_pups.csv")
+
+View(pups_base)
+View(pups_readr)
+
+pups_base
+pups_readr
+
+pups_base$S
+pups_readr$S
+```
