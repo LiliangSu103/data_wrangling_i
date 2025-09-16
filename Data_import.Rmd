@@ -2,7 +2,7 @@
 title: "Simple document"
 author: "Liliang Su"
 date: "2025.9.6"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -12,27 +12,32 @@ library(tidyverse)
 
 ## Importing data tables
 
-Here's a **code chunk** that samples from 
-a _normal distribution_:
+Let's import a dataset.
 
 ```{r}
 litters_df = read_csv(file = "./data/FAS_litters.csv")
 #litters_df = read_csv(file = "~/Desktop/CU_course/8105_DataScience1/Topic2_DataWrangling_1/data/FAS_litters.csv")
-
-names(litters_df)
 ```
 
-Convert column names to lower snake case.
+Look at your data!
+
 ```{r}
-litters_df = janitor::clean_names(litters_df)
 names(litters_df)
 ```
 
-
-## Looking at the data
+Update the name in `litters_df`.
+Convert column names to lower snake case. no space, replace it with underline.
+```{r}
+litters_df = 
+  janitor::clean_names(litters_df)
+```
+Look at the data again
 
 ```{r}
 litters_df
+```
+
+```{r}
 tail(litters_df, 5)
 ```
 ```{r}
@@ -52,13 +57,26 @@ head(litters_df)
 
 ```
 
-*   missing values
+### Fix the missingness
 ```{r}
 litters_df = 
     read_csv(
         file = "./data/FAS_litters.csv",
         na = c(".", "NA", ""))
 head(litters_df)
+```
+learning assignment: importing `FAS_pups`
+
+```{r}
+pups_df =
+  read_csv(
+    "data/FAS_pups.csv",
+    skip = 3,
+    na = c( "NA",".", "")
+    )
+
+pups_df =
+  janitor::clean_names(pups_df)
 ```
 
 ## Parsing columns
@@ -112,22 +130,25 @@ mlb11_df = read_excel("data/mlb11.xlsx", n_max = 20)
 head(mlb11_df, 5)
 ```
 
+```{r}
+fellowship_ring = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") 
+```
+
+
 ## other file formats
 ```{r}
 library(haven)
 
 pulse_df = read_sas("./data/public_pulse_data.sas7bdat")
 
-head(pulse_df, 5)
+pulse_df = janitor::clean_names(pulse_df)
 ```
 
 ## Comparsion with base R (read.csv)
 ```{r}
 pups_base = read.csv("./data/FAS_pups.csv")
 pups_readr = read_csv("./data/FAS_pups.csv")
-
-View(pups_base)
-View(pups_readr)
 
 pups_base
 pups_readr
